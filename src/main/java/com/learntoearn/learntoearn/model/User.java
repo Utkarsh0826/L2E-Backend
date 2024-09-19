@@ -25,6 +25,7 @@ public class User {
 
     @NotBlank(message = "Phone number is mandatory")
     private String phoneNumber;
+	private String role = "STUDENT";  // Can be "ADMIN" or "STUDENT"
 
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must be at least 8 characters long")
@@ -104,6 +105,15 @@ public class User {
 	public void setExam(String exam) {
 		this.exam = exam;
 	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
 
    
     

@@ -1,5 +1,6 @@
 package com.learntoearn.learntoearn.controller;
 
+import com.learntoearn.learntoearn.DTO.UserResponseDTO;
 import com.learntoearn.learntoearn.model.User;
 import com.learntoearn.learntoearn.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class UserController {
     public ResponseEntity<?> signup(@Valid @RequestBody User user) {
         try {
             // Check if email is already registered
-            Optional<User> existingUser = userService.authenticateUser(user.getEmail(), user.getPassword());
+            Optional<UserResponseDTO> existingUser = userService.authenticateUser(user.getEmail(), user.getPassword());
             if (existingUser.isPresent()) {
                 return ResponseEntity.badRequest().body("Email is already registered.");
             }
@@ -32,11 +33,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User loginRequest) {
-        Optional<User> user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
+    public ResponseEntity<?> loginUser(@RequestBody User loginRequest) {
+        Optional<UserResponseDTO> user = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
         if (user.isPresent()) {
-            return ResponseEntity.ok("Login successful!");
+            return ResponseEntity.ok(user.get());
+        } else {
+            return ResponseEntity.status(401).body("Invalid email or password");
         }
-        return ResponseEntity.badRequest().body("Invalid email or password.");
     }
 }

@@ -1,5 +1,6 @@
 package com.learntoearn.learntoearn.service;
 
+import com.learntoearn.learntoearn.DTO.UserResponseDTO;
 import com.learntoearn.learntoearn.model.User;
 import com.learntoearn.learntoearn.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Optional<User> authenticateUser(String email, String password) {
+    public Optional<UserResponseDTO> authenticateUser(String email, String password) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-            return user;
+            User loggedInUser = user.get();
+            UserResponseDTO userResponseDTO = new UserResponseDTO(
+                    loggedInUser.getId(),
+                    loggedInUser.getName(),
+                    loggedInUser.getEmail(),
+                    loggedInUser.getPhoneNumber(),
+                    loggedInUser.getGender(),
+                    loggedInUser.getExam(),
+                    loggedInUser.getRole()
+                    
+            );
+            return Optional.of(userResponseDTO);
         }
         return Optional.empty();
     }
